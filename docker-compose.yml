@@ -1,0 +1,22 @@
+---
+version: '3'
+
+services:
+  backend:
+    build: './docker-images/backend'
+    depends_on:
+      - x11server
+    environment:
+      - UI_GEOMETRY=${UI_GEOMETRY}
+      - DISPLAY=x11server:0
+  x11server:
+    build: ./docker-images/x11server
+    environment:
+      UI_GEOMETRY: ${UI_GEOMETRY}
+      XFB_SCREEN: ${UI_GEOMETRY}x24
+      XFB_SCREEN_DPI: 150u
+  novnc:
+    image: gotget/novnc
+    ports:
+      - 6080:6080
+    command: --vnc x11server:5900
